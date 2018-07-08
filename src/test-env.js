@@ -387,6 +387,11 @@ function TestEnv() {
             }
         },
         
+        /**
+         * Test time to create workers
+         * 
+         * @param {_threadCount} int number of workers to generate
+         */
         createWorker: (_threadCount=1) => {
             let threadList = [];
             const workerScript = `self.onmessage = function(e){self.postMessage(e.data)}`;
