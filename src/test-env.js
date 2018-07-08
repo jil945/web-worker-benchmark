@@ -338,8 +338,18 @@ function TestEnv() {
             let returnCount = 0;
             
             let threadList = [];
-            const workerScript = `function sum(_begin, _end) { let res = _begin || 0; for(let i = res + 1; i < _end; i++) {res += i;} return res;} 
-            self.onmessage = function(e){let res = sum(e.data.begin, e.data.end); self.postMessage(res); }`
+            const workerScript = `
+                function sum(_begin, _end) { 
+                    let res = _begin || 0;
+                    for(let i = res + 1; i < _end; i++) {
+                        res += i;
+                    } 
+                    return res;
+                } 
+                self.onmessage = function(e) {
+                    let res = sum(e.data.begin, e.data.end); 
+                    self.postMessage(res); 
+                }`
             const bb = new Blob([workerScript], { type:'text/javascript'});
             const bbURL = URL.createObjectURL(bb);
             
