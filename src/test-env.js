@@ -1,13 +1,20 @@
+import { TEST_LIST, TEST_COUNT, SAMPLE_LIST } from "./test-const";
+import Util from "./dependencies/util";
+import RSA from "./dependencies/rsa";
+
 // Event for Finished Test
-const FIN_STR = '__test_done__'
+const FIN_STR = '__test_done__';
 const FIN_EVENT = new Event(FIN_STR);
 FIN_EVENT.initEvent(FIN_STR, true, true);
 function testFinish(){
     let temp_event = new FIN_EVENT.constructor(FIN_EVENT.type, FIN_EVENT);
-    window.setTimeout(()=> {document.dispatchEvent(temp_event)}, 500);
+    window.setTimeout(()=> {document.dispatchEvent(temp_event);}, 500);
 }
 
-// unique id for each test and sample
+/** 
+ * Unique id for each test and sample 
+ * @type {number}
+ */
 let _uniqueId = 0;
 
 // Constant Strings
@@ -18,7 +25,7 @@ const RESULT_ID_STR = "result-";
 const COUNT_STR     = "count-";
 
 // Constant String Id getter
-const getTestId   = (_id)                  => (TEST_ID_STR + _id);
+const getTestId   = (id)                  => (TEST_ID_STR + id);
 const getTimeId   = (_sId, _tId, _count=1) => (SAMPLE_ID_STR + _sId + "-" + TIME_ID_STR + _tId + "-" + COUNT_STR + _count);
 const getResultId = (_sId, _tId, _count=1) => (SAMPLE_ID_STR + _sId + "-" + RESULT_ID_STR + _tId + "-" + COUNT_STR + _count);
 
@@ -57,13 +64,13 @@ function TestEnv() {
             }
             
         }
-    }
+    };
     
     this.initSampleList = function() {
         for(let sample of SAMPLE_LIST) {
             sample.id = _uniqueId++;
         }
-    }
+    };
     
     this.initDocumentTestTable = function(_id) {
         let table = document.getElementById(_id);
@@ -157,31 +164,41 @@ function TestEnv() {
         }
         
         table.appendChild(tbody);
-    }
+    };
     
     this.addStartTestListener = function(_id, event='click') {
         let btn = document.getElementById(_id);
         btn.addEventListener(event, _this.startTest);
-    }
+    };
     
     this.addFinishTestListener = function() {
         document.addEventListener(FIN_STR, function(event) {
             if(_this._testQueue.length > 0) {
                 _this._testQueue.pop()();
             }
-        })
-    }
+        });
+    };
     
-    this.initTestLog = (_id) => {
-        _this._logId = _id;
-    }
+    /**
+     * 
+     * @param {string | number} id 
+     */
+    this.initTestLog = (id) => {
+        _this._logId = id;
+    };
     
-    this.initDocument = function(_tableId, _btnId, _testLogId) {
-        _this.initDocumentTestTable(_tableId);
-        _this.initTestLog(_testLogId);
-        _this.addStartTestListener(_btnId);
+    /**
+     * Initialize Testing document
+     * @param {string} tableId - Table element ID
+     * @param {string} btnId - Button element ID
+     * @param {string} testLogId - Test Log Output element ID
+     */
+    this.initDocument = function(tableId, btnId, testLogId) {
+        _this.initDocumentTestTable(tableId);
+        _this.initTestLog(testLogId);
+        _this.addStartTestListener(btnId);
         _this.addFinishTestListener();
-    }
+    };
     
     
     // logging result, time, message to table
@@ -193,9 +210,9 @@ function TestEnv() {
         }
         log.textContent += ">" + _msg + "\n";
         await Util.sleep();
-    }
+    };
     
-    this.logTime    = function(_time, _sId=this._currSampleId, _tId=this._currTestId, _count=this._currCount) {
+    this.logTime = function(_time, _sId=this._currSampleId, _tId=this._currTestId, _count=this._currCount) {
         let time = document.getElementById(getTimeId(_sId, _tId, _count));
         let parsed = parseFloat(time.textContent);
         if(isNaN(parsed)){
@@ -204,7 +221,7 @@ function TestEnv() {
             time.textContent = parsed + _time;
         }
          
-    }
+    };
     
     // Not used
     this.avgLogTime = function(_size, _sId=this._currSampleId, _tId=this._currTestId) {
@@ -213,7 +230,7 @@ function TestEnv() {
         if(!isNaN(parsed)){
             time.textContent = (parsed / _size);
         }
-    }
+    };
     
     this.logResult  = function(_res, _sId=this._currSampleId, _tId=this._currTestId, _count=this._currCount) {
         let res = document.getElementById(getResultId(_sId, _tId, _count));
@@ -223,7 +240,7 @@ function TestEnv() {
         } else {
             res.textContent = parsed + _res;
         }
-    }
+    };
     
     // Not used
     this.avgLogResult = function(_size, _sId=this._currSampleId, _tId=this._currTestId){
@@ -232,7 +249,7 @@ function TestEnv() {
         if(!isNaN(parsed)){
             res.textContent = (parsed / _size);
         }
-    }
+    };
     
         
     this.startTest = async function() {        
@@ -257,7 +274,7 @@ function TestEnv() {
                 await _this.logMessage(_this._key);
                 
                 testFinish();
-            }
+            };
             
             _this._testQueue.push(gen_sample_fn);
             
@@ -266,7 +283,7 @@ function TestEnv() {
                     if(test.sampleCount > 0) {
                         let case_fn = () => {
                             return _this.TEST_CASE[test.case](test.params);
-                        }
+                        };
                         
                         // Check for function wrapper
                         if(test.wrapper) {
@@ -278,7 +295,7 @@ function TestEnv() {
                                 _this.logTime((end - start));
                                 _this.logResult(res);
                                 testFinish();
-                            }
+                            };
                         }
                         
                         let test_fn = function() {
@@ -286,7 +303,7 @@ function TestEnv() {
                             _this._currTestId = test.id;
                             _this._currCount = i;
                             case_fn();
-                        }
+                        };
                         
                         _this._testQueue.push(test_fn);
                         
@@ -303,23 +320,28 @@ function TestEnv() {
         
         // run first test
         _this._testQueue.pop()();
-    }
+    };
     
-    this.generateSamples = function(_size, _bits=32) {
+    /**
+     * Generate list of random sample numbers and RSA keypair
+     * @param {number} size - number of samples to generate
+     * @param {number} [bits=32] - size of RSA keypair to generate
+     */
+    this.generateSamples = function(size, bits=32) {
         _this._testSample = [];
         
-        let k = RSA.generate(_bits);
+        let k = RSA.generate(bits);
         _this._key.n = k.n.toString();
         _this._key.e = k.e.toString();
         _this._key.d = k.d.toString();
         const min = 10;
         const max = 100;
-        for(let i = 0; i < _size; i++) {
+        for(let i = 0; i < size; i++) {
             let sample = Math.floor(Math.random() * (max-min) + min);
             let encoded = RSA.encrypt(sample, k.n, k.e);
             _this._testSample.push(encoded.toString());
         }
-    }
+    };
 
     
     this.TEST_CASE = {
@@ -349,7 +371,7 @@ function TestEnv() {
                 self.onmessage = function(e) {
                     let res = sum(e.data.begin, e.data.end); 
                     self.postMessage(res); 
-                }`
+                }`;
             const bb = new Blob([workerScript], { type:'text/javascript'});
             const bbURL = URL.createObjectURL(bb);
             
@@ -376,7 +398,7 @@ function TestEnv() {
                         Util.sleep();
                         testFinish();
                     }
-                }
+                };
                 
                 threadList.push(worker);
                 
@@ -390,16 +412,16 @@ function TestEnv() {
         /**
          * Test time to create workers
          * 
-         * @param {_threadCount} int number of workers to generate
+         * @param {number} n number of workers to generate
          */
-        createWorker: (_threadCount=1) => {
+        createWorker: (n=1) => {
             let threadList = [];
             const workerScript = `self.onmessage = function(e){self.postMessage(e.data)}`;
             const bb = new Blob([workerScript], { type:'text/javascript'});
             const bbURL = URL.createObjectURL(bb);
             
             let start = performance.now();
-            for(let i = 0; i < _threadCount; i++) {
+            for(let i = 0; i < n; i++) {
                 let worker = new Worker(bbURL);
                 threadList.push(worker);
             }
@@ -414,12 +436,17 @@ function TestEnv() {
             URL.revokeObjectURL(bbURL);
             
             // log time and results
-            _this.logResult(_threadCount);
+            _this.logResult(n);
             _this.logTime((end - start));
             Util.sleep();
             testFinish();
         },
-        sendSingleMessage: (_bytes) => {
+        /**
+         * Test time to send a single string message across message channel
+         * 
+         * @param {number} bytes size of message to send (in bytes)
+         */
+        sendSingleMessage: (bytes) => {
             const workerScript = `self.onmessage = function(e){self.postMessage(e.data);}`;
             const bb = new Blob([workerScript], { type:'text/javascript'});
             const bbURL = URL.createObjectURL(bb);
@@ -436,9 +463,9 @@ function TestEnv() {
                 _this.logTime((end - start));
                 Util.sleep();
                 testFinish();
-            }
+            };
             
-            let msg = Util.generateString(_bytes);
+            let msg = Util.generateString(bytes);
             start = window.performance.now();
             worker.postMessage(msg);
         },
@@ -446,7 +473,7 @@ function TestEnv() {
         
         
         singleDecrypt: () => {
-            let count = 0
+            let count = 0;
             let k = _this._key;
             for(let sample of _this._testSample){
                 let decrypted = RSA.decrypt(sample, k.d, k.n);
@@ -466,7 +493,7 @@ function TestEnv() {
                 sampleList: [],
                 d: key.d,
                 n: key.n,
-            }
+            };
             for(let i = 0; i < _threadCount; i++) {
                 let worker = new Worker('decrypt-worker.js');
                 worker.onmessage = function(e) {
@@ -481,7 +508,7 @@ function TestEnv() {
                         Util.sleep();
                         testFinish();
                     }
-                }
+                };
                 
                 msg.sampleList = _this._testSample.slice(i*step, (i+1)*step);
                 worker.postMessage(JSON.stringify(msg));
@@ -496,9 +523,11 @@ function TestEnv() {
             _this.logMessage("No Test Case for " + _str);
             return;
         }
-    }
+    };
     
     console.log("Init Testing Environment");
     _this.initTestList();
     _this.initSampleList();
 }
+
+export default TestEnv;

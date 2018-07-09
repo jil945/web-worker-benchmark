@@ -1,3 +1,5 @@
+// @ts-nocheck
+import bigInt from "./BigInteger";
 'use strict';
 
 /**
@@ -13,14 +15,14 @@ var RSA = {};
  * Generates a k-bit RSA public/private key pair
  * https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Code
  *
- * @param   {keysize} int, bitlength of desired RSA modulus n (should be even)
+ * @param   {number} keysize bitlength of desired RSA modulus n (should be even)
  * @returns {array} Result of RSA generation (object with three bigInt members: n, e, d)
  */
 RSA.generate = function (keysize) {
     /**
      * Generates a random k-bit prime greater than √2 × 2^(k-1)
      *
-     * @param   {bits} int, bitlength of desired prime
+     * @param   {number} bits, bitlength of desired prime
      * @returns {bigInt} a random generated prime
      */
     function random_prime(bits) {
@@ -44,7 +46,7 @@ RSA.generate = function (keysize) {
     } while (bigInt.gcd(e, lambda).notEquals(1) || p.minus(q).abs().shiftRight(keysize/2-100).isZero());
 
     return {
-    	n: p.multiply(q),   // public key (part I)
+        n: p.multiply(q),   // public key (part I)
         e: e,               // public key (part II)
         d: e.modInv(lambda) // private key d = e^(-1) mod λ(n)
     };
@@ -53,23 +55,25 @@ RSA.generate = function (keysize) {
 /**
  * Encrypt
  *
- * @param   {m} int / bigInt: the 'message' to be encoded
- * @param   {n} int / bigInt: n value returned from RSA.generate() aka public key (part I)
- * @param   {e} int / bigInt: e value returned from RSA.generate() aka public key (part II)
+ * @param   {number|bigInt} m the 'message' to be encoded
+ * @param   {number|bigInt} n value returned from RSA.generate() aka public key (part I)
+ * @param   {number|bigInt} e value returned from RSA.generate() aka public key (part II)
  * @returns {bigInt} encrypted message
  */
 RSA.encrypt = function(m, n, e){
-	return bigInt(m).modPow(e, n);
+    return bigInt(m).modPow(e, n);
 };
 
 /**
  * Decrypt
  *
- * @param   {c} int / bigInt: the 'message' to be decoded (encoded with RSA.encrypt())
- * @param   {d} int / bigInt: d value returned from RSA.generate() aka private key
- * @param   {n} int / bigInt: n value returned from RSA.generate() aka public key (part I)
+ * @param   {number|bigInt} c the 'message' to be decoded (encoded with RSA.encrypt())
+ * @param   {number|bigInt} d value returned from RSA.generate() aka private key
+ * @param   {number|bigInt} n value returned from RSA.generate() aka public key (part I)
  * @returns {bigInt} decrypted message
  */
 RSA.decrypt = function(c, d, n){
-	return bigInt(c).modPow(d, n);   
+    return bigInt(c).modPow(d, n);   
 };
+
+export default RSA;

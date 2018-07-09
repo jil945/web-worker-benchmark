@@ -1,0 +1,24 @@
+{
+  "name": "web-worker-benchmark",
+  "version": "0.0.1",
+  "author": "Jim Lee <jimleee945@gmail.com>",
+  "description": "placeholder",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint": "^5.1.0",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jil945/web-worker-benchmark.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jil945/web-worker-benchmark/issues"
+  },
+  "homepage": "https://github.com/jil945/web-worker-benchmark#readme"
+}

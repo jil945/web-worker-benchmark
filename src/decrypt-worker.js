@@ -1,4 +1,4 @@
-importScripts('./dependencies/BigInteger.min.js', './dependencies/rsa.js');
+import RSA from "./dependencies/rsa";
 
 self.onmessage = function(e){
     let count = 0;
@@ -8,4 +8,4 @@ self.onmessage = function(e){
         count++;
     }
     self.postMessage(count);
-}
+};

@@ -1,7 +1,20 @@
-// Default Test Count
+import Util from "./dependencies/util";
+
+/**
+ * Default Test Count
+ * @type {Number}
+ */
 const TEST_COUNT = 5;
 
-// Sample list
+/**
+ * @typedef {Object} TestSample
+ * @prop {Number} bits - number of bits for RSA keypair
+ * @prop {Number} size - number of samples to run
+ */
+/**
+ * List of params for RSA encrypt/decrypt
+ * @type {Array<TestSample>}
+ */
 let SAMPLE_LIST = [
     {
         bits: 32,
@@ -17,15 +30,18 @@ let SAMPLE_LIST = [
 
 // Test Cases
 /**
- * Each Test Case must follow the format
- {
-    name: [String] name of the test
-    case: [String] name of the test case to run in TestEnv
-    wrapper: [boolean] (default: false) if the test case needs a wrapper function for timing
-    params: [Object | String | Number] parameters of the testcase, can only be one argument
-    sampleCount: [Number] (default: SAMPLE_LIST.length) number of samples in the SAMPLE_LIST to run
-    count: [Number] (default: TEST_COUNT) number to times to run the test
- }
+ * @typedef {Object} TestCase
+ * @prop {String} name - name of the test
+ * @prop {String} case - name of the test case to run in TestEvn
+ * @prop {boolean} [wrapper=false] - if the test case needs s wrapper function 
+ * @prop {Object | String | Number} params - parameters of th testcase, can only be one arguement
+ * @prop {Number=} sampleCount - number of samples in the SAMPLE_LIST to run
+ * @prop {Number=} count - number of time to run the test
+ */
+
+/**
+ * List of test cases
+ * @type {Array<TestCase>}
  */
 let TEST_LIST = [];
 
@@ -89,14 +105,14 @@ let TEST_LIST = [];
     }
     
     // Set up Parallel Sum Test
-    const pSum_name = "Parallel Sum(%t) w/ %n Workers "
+    const pSum_name = "Parallel Sum(%t) w/ %n Workers ";
     const pSum_threadCount = create_params;
     const pSum_num = [1e8, 1e9];
     for(let i = 0; i < pSum_num.length; i++) {
         for(let j = 0; j < pSum_threadCount.length; j++) {
             TEST_LIST.push({
                 name: pSum_name.replace('%n', pSum_threadCount[j])
-                        .replace('%t', pSum_num[i]),
+                    .replace('%t', pSum_num[i]),
                 case: 'parallelSum',
                 params: {
                     toString: () => pSum_threadCount[j],
@@ -129,3 +145,5 @@ let TEST_LIST = [];
     }
     
 })();
+
+export { TEST_LIST, TEST_COUNT, SAMPLE_LIST };
