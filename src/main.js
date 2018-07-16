@@ -1,4 +1,5 @@
 import TestEnv from "./test-env";
+import './assets/style.css';
 
 let env = new TestEnv();
         

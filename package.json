@@ -5,10 +5,15 @@
   "description": "placeholder",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
     "eslint": "^5.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.21.0",
     "webpack": "^4.15.1",
     "webpack-cli": "^3.0.8"
   },
@@ -20,5 +25,6 @@
   "bugs": {
     "url": "https://github.com/jil945/web-worker-benchmark/issues"
   },
-  "homepage": "https://github.com/jil945/web-worker-benchmark#readme"
+  "homepage": "https://github.com/jil945/web-worker-benchmark#readme",
+  "dependencies": {}
 }
