@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     entry: {
         main: "./src/main.js",
-        "decrypt-worker": "./src/decrypt-worker.js",
+        "decrypt-worker": "./src/components/decrypt-worker.js",
     },
     devtool: "inline-source-map",
     plugins: [

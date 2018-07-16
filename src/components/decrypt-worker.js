@@ -1,4 +1,4 @@
-import RSA from "./dependencies/rsa";
+import RSA from "../dependencies/rsa";
 
 self.onmessage = function(e){
     let count = 0;

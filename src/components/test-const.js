@@ -1,4 +1,4 @@
-import Util from "./dependencies/util";
+import Util from "../dependencies/util";
 
 /**
  * Default Test Count

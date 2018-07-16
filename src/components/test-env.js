@@ -1,6 +1,6 @@
 import { TEST_LIST, TEST_COUNT, SAMPLE_LIST } from "./test-const";
-import Util from "./dependencies/util";
-import RSA from "./dependencies/rsa";
+import Util from "../dependencies/util";
+import RSA from "../dependencies/rsa";
 
 // Event for Finished Test
 const FIN_STR = '__test_done__';
